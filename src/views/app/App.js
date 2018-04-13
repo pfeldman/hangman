@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './App.scss';
+import Blackboard from 'components/blackboard/Blackboard';
 
 class App extends Component {
   render() {
     return (
-      <div className="App" />
+      <Blackboard />
     );
   }
 }
