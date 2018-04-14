@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {drawInChalk, applyChalkStyle} from 'helpers/chalkHelper';
+import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
 import './Word.scss';
 
 class Word extends Component {
@@ -38,7 +38,7 @@ class Word extends Component {
         ctx.font = `${this.width}px Walter Turncoat`;
         ctx.fillStyle = "white";
         ctx.fillText(match.letter.toUpperCase(), this.letterPosition[match.position], 90);
-        applyChalkStyle(ctx,
+        applySquareChalkStyle(ctx,
           {
             x: this.letterPosition[match.position],
             y: 0
