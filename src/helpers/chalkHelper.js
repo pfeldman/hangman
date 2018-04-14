@@ -1,4 +1,4 @@
-export function drawInChalk(ctx, startX, startY, endX, endY, brushSize = 7, duration = 500) {
+export function drawInChalk(ctx, startX, startY, endX, endY, brushSize = 7, duration = 500, color = '255,255,255') {
   return new Promise(resolve => {
     let start = null;
     let lastStepTimestamp = null;
@@ -27,24 +27,15 @@ export function drawInChalk(ctx, startX, startY, endX, endY, brushSize = 7, dura
       newPosition.y = oldPosition.y + moveY;
       ctx.beginPath();
       ctx.lineWidth = brushSize;
-      ctx.fillStyle = 'rgba(255,255,255,0.5)';
-      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.fillStyle = `rgba(${color},0.5)`;
+      ctx.strokeStyle = `rgba(${color},0.5)`;
 
       ctx.lineCap = 'round';
       ctx.moveTo(oldPosition.x, oldPosition.y);
       ctx.lineTo(newPosition.x, newPosition.y);
       ctx.stroke();
 
-      const length = Math.round(Math.sqrt(Math.pow(newPosition.x - oldPosition.x, 2) + Math.pow(oldPosition.y - newPosition.y,2)) / (5 / brushSize));
-      const xUnit = (newPosition.x-oldPosition.x)/length;
-      const yUnit = (newPosition.y-oldPosition.y)/length;
-      for(let i = 0; i < length; i++){
-        const xCurrent = oldPosition.x+(i*xUnit);
-        const yCurrent = oldPosition.y+(i*yUnit);
-        const xRandom = xCurrent + (Math.random() - 0.5) * brushSize * 1.2;
-        const yRandom = yCurrent + (Math.random() - 0.5) * brushSize * 1.2;
-        ctx.clearRect(xRandom, yRandom, Math.random() * 2 + 2, Math.random() + 1);
-      }
+      applyChalkStyle(ctx, oldPosition, newPosition, brushSize);
 
       oldPosition.x = newPosition.x;
       oldPosition.y = newPosition.y;
@@ -58,4 +49,36 @@ export function drawInChalk(ctx, startX, startY, endX, endY, brushSize = 7, dura
 
     requestAnimationFrame(step);
   });
+}
+
+export function applyChalkStyle(ctx, startPosition, endPosition, brushSize) {
+  const length = Math.round(Math.sqrt(Math.pow(endPosition.x - startPosition.x, 2) + Math.pow(startPosition.y - endPosition.y,2)) / (5 / brushSize));
+  const xUnit = (endPosition.x - startPosition.x) / length;
+  const yUnit = (endPosition.y - startPosition.y) / length;
+  for(let i = 0; i < length; i++){
+    const xCurrent = startPosition.x+(i*xUnit);
+    const yCurrent = startPosition.y+(i*yUnit);
+    const xRandom = xCurrent + (Math.random() - 0.5) * brushSize * 1.2;
+    const yRandom = yCurrent + (Math.random() - 0.5) * brushSize * 1.2;
+    ctx.clearRect(xRandom, yRandom, Math.random() * 2 + 2, Math.random() + 1);
+  }
+}
+
+export function applySquareChalkStyle(ctx, startPosition, endPosition, brushSize) {
+  const width = endPosition.x - startPosition.x;
+  const lines = Math.ceil(width / brushSize);
+
+  for (let i = 0; i < lines; i++) {
+    applyChalkStyle(
+      ctx,
+      {
+        x: startPosition.x + brushSize * i,
+        y: startPosition.y
+      },
+      {
+        x: startPosition.x + brushSize * i,
+        y: endPosition.y
+      }, brushSize
+    );
+  }
 }
