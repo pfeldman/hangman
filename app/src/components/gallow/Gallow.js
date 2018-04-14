@@ -78,7 +78,7 @@ class Gallow extends Component {
 function mapStateToProps(state) {
   return {
     errors: state.letter.error
-  }
+  };
 }
 
 Gallow.propTypes = {

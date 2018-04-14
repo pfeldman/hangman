@@ -77,7 +77,7 @@ function mapStateToProps(state) {
     error: state.letter.error,
     letter: state.letter.letter,
     positions: state.letter.positions
-  }
+  };
 }
 
 Word.propTypes = {

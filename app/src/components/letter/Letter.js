@@ -47,7 +47,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 Letter.propTypes = {
-  letter: PropTypes.string
+  letter: PropTypes.string,
+  letterAction: PropTypes.object
 };
 
 export default connect(
