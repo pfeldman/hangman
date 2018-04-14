@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
 import './Word.scss';
 
@@ -12,53 +13,51 @@ class Word extends Component {
     this.width;
   }
 
-  componentDidMount() {
-    const {letters} = this.props;
+  componentWillReceiveProps(nextProps) {
+    const {updated, letters, error, positions, letter} = nextProps;
 
-    const ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, 500, 200);
+    if (updated !== this.props.updated && !error) {
+      positions.forEach(position => {
+        if (this.positions.indexOf(position) === -1) {
+          this.positions.push(position);
+          const ctx = this.canvas.getContext('2d');
+          ctx.font = `${this.width}px Walter Turncoat`;
+          ctx.fillStyle = "white";
+          ctx.fillText(letter.toUpperCase(), this.letterPosition[position], 90);
+          applySquareChalkStyle(ctx,
+            {
+              x: this.letterPosition[position],
+              y: 0
+            },
+            {
+              x: this.letterPosition[position] + this.width,
+              y: 90
+            },
+            7);
+        }
+      });
+    }
 
-    const space = 30;
-    this.width = this.canvasWidth / letters - space;
-    if (this.width > 100) this.width = 100;
-    const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
+    if (this.props.letters !== letters) {
+      const ctx = this.canvas.getContext('2d');
+      ctx.clearRect(0, 0, 500, 200);
 
-    if (letters > 0) {
-      this.renderLetter(ctx, 0, space, this.width, startPoint);
+      const space = 30;
+      this.width = this.canvasWidth / letters - space;
+      if (this.width > 100) this.width = 100;
+      const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
+      if (letters > 0) {
+        this.renderLetter(ctx, 0, space, this.width, startPoint, letters);
+      }
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {matches} = nextProps;
-
-    matches.map(match => {
-      if (this.positions.indexOf(match.position) === -1) {
-        this.positions.push(match.position);
-        const ctx = this.canvas.getContext('2d');
-        ctx.font = `${this.width}px Walter Turncoat`;
-        ctx.fillStyle = "white";
-        ctx.fillText(match.letter.toUpperCase(), this.letterPosition[match.position], 90);
-        applySquareChalkStyle(ctx,
-          {
-            x: this.letterPosition[match.position],
-            y: 0
-          },
-          {
-            x: this.letterPosition[match.position] + this.width,
-            y: 90
-          },
-          7);
-      }
-    });
-  }
-
-  renderLetter(ctx, letterIndex, space, width, startPoint) {
-    const {letters} = this.props;
+  renderLetter(ctx, letterIndex, space, width, startPoint, letters) {
     this.letterPosition.push(startPoint + space);
     drawInChalk(ctx, startPoint + space, 100, startPoint + width, 100)
       .then(() => {
         if (letterIndex + 1 < letters) {
-          this.renderLetter(ctx, letterIndex + 1, space, width, startPoint + width);
+          this.renderLetter(ctx, letterIndex + 1, space, width, startPoint + width, letters);
         }
       });
   }
@@ -66,18 +65,29 @@ class Word extends Component {
   render() {
     return (
       <div className="word">
-        <canvas width={this.canvasWidth} height="150" ref={canvas => this.canvas = canvas}/>
+        <canvas width={this.canvasWidth} height="150" ref={canvas => this.canvas = canvas} />
       </div>
     );
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    updated: state.letter.timeStamp,
+    error: state.letter.error,
+    letter: state.letter.letter,
+    positions: state.letter.positions
+  }
+}
+
 Word.propTypes = {
-  letters: PropTypes.number.isRequired,
-  matches: PropTypes.arrayOf(PropTypes.shape({
-    position: PropTypes.number,
-    letter: PropTypes.string
-  }))
+  letters: PropTypes.number,
+  updated: PropTypes.number,
+  error: PropTypes.number,
+  letter: PropTypes.string,
+  positions: PropTypes.arrayOf(PropTypes.number)
 };
 
-export default Word;
+export default connect(
+  mapStateToProps
+)(Word);

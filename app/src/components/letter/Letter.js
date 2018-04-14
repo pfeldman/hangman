@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as letterAction from 'actions/letterAction';
 import './Letter.scss';
 
 class Letter extends Component {
@@ -14,11 +17,13 @@ class Letter extends Component {
 
   handleLetterClick() {
     const {used} = this.state;
+    const {letter, letterAction} = this.props;
 
     if (!used) {
       this.setState({
         used: true
       });
+      letterAction.postLetter(letter);
     }
   }
 
@@ -35,8 +40,17 @@ class Letter extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    letterAction: bindActionCreators(letterAction, dispatch)
+  };
+}
+
 Letter.propTypes = {
   letter: PropTypes.string
 };
 
-export default Letter;
+export default connect(
+  null,
+  mapDispatchToProps
+)(Letter);

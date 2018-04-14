@@ -1,0 +1,3 @@
+export const GAME_FETCH = 'GAME_FETCH';
+export const LETTER_GUESSED = 'LETTER_GUESSED';
+export const LETTER_ERROR = 'LETTER_ERROR';

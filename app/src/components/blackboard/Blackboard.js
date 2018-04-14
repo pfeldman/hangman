@@ -1,47 +1,30 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as gameAction from 'actions/gameAction';
 import './Blackboard.scss';
 import Gallow from 'components/gallow/Gallow';
 import Word from 'components/word/Word';
 import Letters from 'components/letters/Letters';
 
 class Blackboard extends Component {
-  constructor() {
-    super();
+  componentDidMount() {
+    const {gameAction} = this.props;
 
-    this.state = {
-      matches: [],
-      lose: 0
-    };
-    this.a = this.a.bind(this);
-    this.b = this.b.bind(this);
-  }
-
-  a() {
-    this.setState({
-      matches: [
-        {
-          position: 1,
-          letter: 'c'
-        }
-      ]
-    });
-  }
-
-  b() {
-    this.setState({
-      lose: this.state.lose + 1
-    });
+    gameAction.fetchGame();
   }
 
   render() {
+    const {letters} = this.props;
     return (
       <div className="blackboard">
         <div className="blackboard__game">
           <div className="blackboard__game__top">
-            <Gallow loseSteps={this.state.lose} />
+            <Gallow />
             <Letters />
           </div>
-          <Word letters={4} matches={this.state.matches} />
+          <Word letters={letters} />
         </div>
         <button onClick={this.a}>Sarasa</button>
         <button onClick={this.b}>Lose</button>
@@ -50,4 +33,24 @@ class Blackboard extends Component {
   }
 }
 
-export default Blackboard;
+Blackboard.propTypes = {
+  gameAction: PropTypes.object,
+  letters: PropTypes.number
+};
+
+function mapStateToProps(state) {
+  return {
+    letters: state.game.letters
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    gameAction: bindActionCreators(gameAction, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Blackboard);

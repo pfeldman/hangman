@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import {drawInChalk} from 'helpers/chalkHelper';
 import {renderHead, renderNeck, renderArmOrLeg, renderBody, renderFoot, kill} from 'helpers/bodyHelper';
 import {getAngle} from 'helpers/angleHelper';
@@ -27,11 +28,10 @@ class Gallow extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {loseSteps} = this.props;
+    const {errors} = this.props;
     const ctx = this.canvas.getContext('2d');
-
-    if (loseSteps !== prevProps.loseSteps) {
-      switch(loseSteps) {
+    if (errors !== prevProps.errors) {
+      switch(errors) {
         case 1:
           renderHead(ctx, 270, 170, 20, this.brushSize);
           break;
@@ -75,8 +75,16 @@ class Gallow extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    errors: state.letter.error
+  }
+}
+
 Gallow.propTypes = {
-  loseSteps: PropTypes.number
+  errors: PropTypes.number
 };
 
-export default Gallow;
+export default connect(
+  mapStateToProps
+)(Gallow);
