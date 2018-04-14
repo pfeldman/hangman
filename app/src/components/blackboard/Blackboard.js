@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import './Blackboard.scss';
 import Gallow from 'components/gallow/Gallow';
 import Word from 'components/word/Word';
+import Letters from 'components/letters/Letters';
 
 class Blackboard extends Component {
   constructor() {
     super();
+
     this.state = {
       matches: [],
       lose: 0
@@ -34,8 +36,13 @@ class Blackboard extends Component {
   render() {
     return (
       <div className="blackboard">
-        <Gallow loseSteps={this.state.lose} />
-        <Word letters={4} matches={this.state.matches} />
+        <div className="blackboard__game">
+          <div className="blackboard__game__top">
+            <Gallow loseSteps={this.state.lose} />
+            <Letters />
+          </div>
+          <Word letters={4} matches={this.state.matches} />
+        </div>
         <button onClick={this.a}>Sarasa</button>
         <button onClick={this.b}>Lose</button>
       </div>
