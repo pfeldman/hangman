@@ -1,6 +1,8 @@
 export default {
   game: {
-    letters: null
+    letters: null,
+    loggedIn: false,
+    loggingIn: false
   },
   guess: {
     letter: null,

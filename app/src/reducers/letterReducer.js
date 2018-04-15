@@ -7,7 +7,7 @@ export default function letter(state = initialState.guess, action) {
       return Object.assign({}, state, {
         letter: action.letter,
         positions: action.positions,
-        error: false,
+        error: 0,
         timeStamp: new Date().getTime()
       });
     case types.LETTER_ERROR:

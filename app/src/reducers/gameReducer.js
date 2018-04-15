@@ -7,6 +7,19 @@ export default function game(state = initialState.game, action) {
       return Object.assign({}, state, {
         letters: action.game.letters
       });
+    case types.GAME_LOGIN_SUCCESS:
+      return Object.assign({}, state, {
+        loggedIn: true,
+        loggingIn: false
+      });
+    case types.GAME_LOGIN_REQUEST:
+      return Object.assign({}, state, {
+        loggingIn: true
+      });
+    case types.GAME_LOGOUT:
+      return Object.assign({}, state, {
+        loggedIn: false
+      });
     default:
       return state;
   }

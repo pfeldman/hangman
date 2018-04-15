@@ -64,7 +64,7 @@ export function applyChalkStyle(ctx, startPosition, endPosition, brushSize) {
   }
 }
 
-export function applySquareChalkStyle(ctx, startPosition, endPosition, brushSize) {
+export function applySquareChalkStyle2(ctx, startPosition, endPosition, brushSize) {
   const width = endPosition.x - startPosition.x;
   const lines = Math.ceil(width / brushSize);
 
@@ -81,4 +81,18 @@ export function applySquareChalkStyle(ctx, startPosition, endPosition, brushSize
       }, brushSize
     );
   }
+}
+
+export function applySquareChalkStyle(ctx, startPosition, endPosition, brushSize) {
+  applyChalkStyle(
+    ctx,
+    {
+      x: startPosition.x,
+      y: startPosition.y + endPosition.y - startPosition.y
+    },
+    {
+      x: endPosition.x,
+      y: startPosition.y + endPosition.y - startPosition.y
+    }, 1000
+  );
 }
