@@ -15,7 +15,7 @@ class Gallow extends Component {
   componentDidMount() {
     const ctx = this.canvas.getContext('2d');
 
-    drawInChalk(ctx, 50, 390, 250, 390, this.brushSize)
+    drawInChalk(ctx, 110, 390, 190, 390, this.brushSize)
       .then(() => {
         drawInChalk(ctx, 150, 390, 150, 100, this.brushSize)
           .then(() => {

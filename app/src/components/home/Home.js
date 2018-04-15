@@ -17,6 +17,14 @@ class Home extends Component {
             text="PLAY"
           />
         </div>
+        <div>
+          <Button
+            width={200}
+            height={50}
+            className="home__stats"
+            text="STATISTICS"
+          />
+        </div>
       </div>
     );
   }

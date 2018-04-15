@@ -2,23 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
 
+import './Button.scss';
+
 class Button extends Component {
-  constructor() {
-    super();
-
-    this.handleEnter = this.handleEnter.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-  }
-
   componentDidMount() {
-    this.drawSquare();
-  }
-
-  handleEnter() {
-    this.drawSquare('255,0,0');
-  }
-
-  handleLeave() {
     this.drawSquare();
   }
 
@@ -37,9 +24,10 @@ class Button extends Component {
           });
       });
 
-    ctx.font = "80px Arial";
+    ctx.font = `${height / 2}px Arial`;
     ctx.fillStyle = "white";
-    ctx.fillText(text, 50, 80);
+    ctx.textAlign = 'center';
+    ctx.fillText(text, width / 2, height - height / 3);
     applySquareChalkStyle(ctx,
       {
         x: 0,
@@ -58,10 +46,8 @@ class Button extends Component {
       <canvas
         width={width}
         height={height}
-        className={className}
+        className={`btn ${className}`}
         ref={canvas => this.startButton = canvas}
-        onMouseEnter={this.handleEnter}
-        onMouseLeave={this.handleLeave}
         onClick={onClick}
       />
     );
