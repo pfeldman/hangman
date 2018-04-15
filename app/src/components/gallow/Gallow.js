@@ -28,7 +28,7 @@ class Gallow extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {errors} = this.props;
+    const {errors, onLose} = this.props;
     const ctx = this.canvas.getContext('2d');
     if (errors !== prevProps.errors) {
       switch(errors) {
@@ -60,7 +60,8 @@ class Gallow extends Component {
           renderFoot(ctx, {x: 220, y: 340}, false, this.brushSize);
           break;
         case 10:
-          kill(ctx, {x: 270, y: 200}, this.brushSize);
+          kill(ctx, {x: 270, y: 200}, this.brushSize)
+            .then(() => onLose());
           break;
       }
     }
@@ -82,7 +83,8 @@ function mapStateToProps(state) {
 }
 
 Gallow.propTypes = {
-  errors: PropTypes.number
+  errors: PropTypes.number,
+  onLose: PropTypes.func
 };
 
 export default connect(

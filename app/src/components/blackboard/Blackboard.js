@@ -11,18 +11,43 @@ import Letters from 'components/letters/Letters';
 import {LOCAL_STORAGE_USER} from '/constants/Constants';
 
 class Blackboard extends Component {
-  componentWillMount() {
-    const {loggedIn} = this.props;
+  constructor() {
+    super();
 
-    if (!loggedIn) {
-      location.href = '/';
-    }
+    this.state = {
+      endRender: false
+    };
+
+    this.win = this.win.bind(this);
+    this.lose = this.lose.bind(this);
+    this.renderLetters = this.renderLetters.bind(this);
   }
 
   componentDidMount() {
     const {gameAction} = this.props;
 
     gameAction.fetchGame();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {loggedIn} = nextProps;
+    if (!loggedIn) {
+      location.href = '/';
+    }
+  }
+
+  renderLetters() {
+    this.setState({
+      endRender: true
+    });
+  }
+
+  win() {
+    console.log('WON!');
+  }
+
+  lose() {
+    console.log('lose :(')
   }
 
   render() {
@@ -34,10 +59,10 @@ class Blackboard extends Component {
         <Header />
         <div className="blackboard__game">
           <div className="blackboard__game__top">
-            <Gallow />
-            <Letters />
+            <Gallow onLose={this.lose} />
+            <Letters className={this.state.endRender ? '' : 'hidden'} />
           </div>
-          <Word letters={letters} />
+          <Word letters={letters} onWin={this.win} finishRender={this.renderLetters} />
         </div>
         <button onClick={this.a}>Sarasa</button>
         <button onClick={this.b}>Lose</button>

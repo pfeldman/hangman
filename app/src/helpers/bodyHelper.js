@@ -59,8 +59,6 @@ export function renderFoot(ctx, startPosition, right = true, brushSize = 7, dura
 
 export function kill(ctx, startPosition, brushSize = 7, duration = 500) {
   const red = '255,0,0';
-  drawInChalk(ctx, startPosition.x - 50, startPosition.y + 50, startPosition.x + 50, startPosition.y - 50, brushSize, duration, red)
-    .then(() => {
-      drawInChalk(ctx, startPosition.x + 50, startPosition.y + 50, startPosition.x - 50, startPosition.y - 50, brushSize, duration, red);
-    });
+  return drawInChalk(ctx, startPosition.x - 50, startPosition.y + 50, startPosition.x + 50, startPosition.y - 50, brushSize, duration, red)
+    .then(() => drawInChalk(ctx, startPosition.x + 50, startPosition.y + 50, startPosition.x - 50, startPosition.y - 50, brushSize, duration, red));
 }

@@ -14,7 +14,7 @@ class Word extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {updated, letters, error, positions, letter} = nextProps;
+    const {updated, letters, error, positions, letter, onWin} = nextProps;
 
     if (updated !== this.props.updated && !error) {
       positions.forEach(position => {
@@ -38,6 +38,10 @@ class Word extends Component {
       });
     }
 
+    if (this.positions.length === letters) {
+      onWin();
+    }
+
     if (this.props.letters !== letters) {
       const ctx = this.canvas.getContext('2d');
       ctx.clearRect(0, 0, 500, 200);
@@ -53,11 +57,14 @@ class Word extends Component {
   }
 
   renderLetter(ctx, letterIndex, space, width, startPoint, letters) {
+    const {finishRender} = this.props;
     this.letterPosition.push(startPoint + space);
     drawInChalk(ctx, startPoint + space, 100, startPoint + width, 100)
       .then(() => {
         if (letterIndex + 1 < letters) {
           this.renderLetter(ctx, letterIndex + 1, space, width, startPoint + width, letters);
+        } else {
+          finishRender();
         }
       });
   }
@@ -85,7 +92,9 @@ Word.propTypes = {
   updated: PropTypes.number,
   error: PropTypes.number,
   letter: PropTypes.string,
-  positions: PropTypes.arrayOf(PropTypes.number)
+  positions: PropTypes.arrayOf(PropTypes.number),
+  onWin: PropTypes.func,
+  finishRender: PropTypes.func
 };
 
 export default connect(

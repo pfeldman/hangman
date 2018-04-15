@@ -47,7 +47,6 @@ export function login(email) {
 export function logout() {
   localStorage.removeItem(LOCAL_STORAGE_TOKEN);
   localStorage.removeItem(LOCAL_STORAGE_USER);
-  location.href = '/';
 
   return {
     type: types.GAME_LOGOUT
