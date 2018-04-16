@@ -48,14 +48,14 @@ export function login(email) {
 function restart() {
   return {
     type: types.GAME_PLAY_AGAIN
-  }
+  };
 }
 
 export function playAgain() {
   return dispatch => {
     dispatch(resetGame());
     dispatch(restart());
-  }
+  };
 }
 
 export function logout() {
@@ -70,11 +70,11 @@ export function logout() {
 export function win() {
   return {
     type: types.GAME_WIN
-  }
+  };
 }
 
 export function lose() {
   return {
     type: types.GAME_LOSE
-  }
+  };
 }

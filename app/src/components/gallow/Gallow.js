@@ -6,6 +6,8 @@ import * as gameAction from 'actions/gameAction';
 import {drawInChalk} from 'helpers/chalkHelper';
 import {renderHead, renderNeck, renderArmOrLeg, renderBody, renderFoot, kill} from 'helpers/bodyHelper';
 import {getAngle} from 'helpers/angleHelper';
+import fail from 'assets/sounds/fail.mp3';
+
 import './Gallow.scss';
 
 class Gallow extends Component {
@@ -33,6 +35,7 @@ class Gallow extends Component {
     const {errors, gameAction} = this.props;
     const ctx = this.canvas.getContext('2d');
     if (errors !== prevProps.errors) {
+      this.fail.play();
       switch(errors) {
         case 1:
           renderHead(ctx, 270, 170, 20, this.brushSize);
@@ -73,6 +76,9 @@ class Gallow extends Component {
     return (
       <div className="gallow">
         <canvas width="400" height="400" ref={canvas => this.canvas = canvas}/>
+          <audio ref={fail => this.fail = fail}>
+            <source src={fail} type="audio/mpeg" />
+          </audio>
       </div>
     );
   }

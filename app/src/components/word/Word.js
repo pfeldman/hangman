@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as gameAction from 'actions/gameAction';
 import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
+import ok from '/assets/sounds/ok.mp3';
 import './Word.scss';
 
 class Word extends Component {
@@ -15,11 +16,26 @@ class Word extends Component {
     this.width;
   }
 
+  componentDidMount() {
+    const {letters} = this.props;
+    const ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, 500, 200);
+
+    const space = 30;
+    this.width = this.canvasWidth / letters - space;
+    if (this.width > 100) this.width = 100;
+    const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
+    if (letters > 0) {
+      this.renderLetter(ctx, 0, space, this.width, startPoint, letters);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const {updated, letters, error, positions, letter, gameAction, gameId} = nextProps;
 
     if (updated !== this.props.updated && !error) {
       positions.forEach(position => {
+        this.okSound.play();
         if (this.positions.indexOf(position) === -1) {
           this.positions.push(position);
           const ctx = this.canvas.getContext('2d');
@@ -35,27 +51,13 @@ class Word extends Component {
               x: this.letterPosition[position] + this.width,
               y: 90
             },
-            7);
+          7);
         }
       });
     }
 
     if (this.positions.length === letters) {
       gameAction.win();
-    }
-  }
-
-  componentDidMount() {
-    const {letters} = this.props;
-    const ctx = this.canvas.getContext('2d');
-    ctx.clearRect(0, 0, 500, 200);
-
-    const space = 30;
-    this.width = this.canvasWidth / letters - space;
-    if (this.width > 100) this.width = 100;
-    const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
-    if (letters > 0) {
-      this.renderLetter(ctx, 0, space, this.width, startPoint, letters);
     }
   }
 
@@ -76,6 +78,9 @@ class Word extends Component {
     return (
       <div className="word">
         <canvas width={this.canvasWidth} height="150" ref={canvas => this.canvas = canvas} />
+        <audio ref={ok => this.okSound = ok}>
+          <source src={ok} type="audio/mpeg" />
+        </audio>
       </div>
     );
   }

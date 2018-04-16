@@ -64,14 +64,14 @@ class Blackboard extends Component {
         </div>
         <Word letters={letters} finishRender={this.renderLetters} />
       </div>
-    )
+    );
   }
 
   get won() {
     const {won} = this.props;
 
     if (won) {
-      return <Win />
+      return <Win />;
     }
   }
 
@@ -79,7 +79,7 @@ class Blackboard extends Component {
     const {lost} = this.props;
 
     if (lost) {
-      return <Lost />
+      return <Lost />;
     }
   }
 

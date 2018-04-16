@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
+import click from 'assets/sounds/click.mp3';
 
 import './Button.scss';
 
 class Button extends Component {
+  constructor() {
+    super();
+
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+  }
   componentDidMount() {
     this.drawSquare();
   }
@@ -42,16 +48,26 @@ class Button extends Component {
     }
   }
 
+  handleMouseDown() {
+    this.clickSound.play();
+  }
+
   render() {
     const {width, height, onClick, className} = this.props;
     return (
-      <canvas
-        width={width}
-        height={height}
-        className={`btn ${className}`}
-        ref={canvas => this.startButton = canvas}
-        onClick={onClick}
-      />
+      <div>
+        <canvas
+          width={width}
+          height={height}
+          className={`btn ${className}`}
+          ref={canvas => this.startButton = canvas}
+          onClick={onClick}
+          onMouseDown={this.handleMouseDown}
+        />
+        <audio ref={click => this.clickSound = click}>
+          <source src={click} type="audio/mpeg" />
+        </audio>
+      </div>
     );
   }
 }
@@ -66,7 +82,8 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  textInChalk: true
+  textInChalk: true,
+  onClick: () => {}
 };
 
 export default Button;
