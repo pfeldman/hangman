@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as gameAction from 'actions/gameAction';
 import {drawInChalk, applySquareChalkStyle} from 'helpers/chalkHelper';
 import './Word.scss';
 
@@ -14,7 +16,7 @@ class Word extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {updated, letters, error, positions, letter, onWin} = nextProps;
+    const {updated, letters, error, positions, letter, gameAction, gameId} = nextProps;
 
     if (updated !== this.props.updated && !error) {
       positions.forEach(position => {
@@ -39,20 +41,21 @@ class Word extends Component {
     }
 
     if (this.positions.length === letters) {
-      onWin();
+      gameAction.win();
     }
+  }
 
-    if (this.props.letters !== letters) {
-      const ctx = this.canvas.getContext('2d');
-      ctx.clearRect(0, 0, 500, 200);
+  componentDidMount() {
+    const {letters} = this.props;
+    const ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, 500, 200);
 
-      const space = 30;
-      this.width = this.canvasWidth / letters - space;
-      if (this.width > 100) this.width = 100;
-      const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
-      if (letters > 0) {
-        this.renderLetter(ctx, 0, space, this.width, startPoint, letters);
-      }
+    const space = 30;
+    this.width = this.canvasWidth / letters - space;
+    if (this.width > 100) this.width = 100;
+    const startPoint = (this.canvasWidth / 2) - ((letters * this.width - space) / 2) - space;
+    if (letters > 0) {
+      this.renderLetter(ctx, 0, space, this.width, startPoint, letters);
     }
   }
 
@@ -78,6 +81,17 @@ class Word extends Component {
   }
 }
 
+Word.propTypes = {
+  letters: PropTypes.number,
+  updated: PropTypes.number,
+  error: PropTypes.number,
+  letter: PropTypes.string,
+  positions: PropTypes.arrayOf(PropTypes.number),
+  gameAction: PropTypes.object,
+  finishRender: PropTypes.func,
+  gameId: PropTypes.number
+};
+
 function mapStateToProps(state) {
   return {
     updated: state.letter.timeStamp,
@@ -87,16 +101,13 @@ function mapStateToProps(state) {
   };
 }
 
-Word.propTypes = {
-  letters: PropTypes.number,
-  updated: PropTypes.number,
-  error: PropTypes.number,
-  letter: PropTypes.string,
-  positions: PropTypes.arrayOf(PropTypes.number),
-  onWin: PropTypes.func,
-  finishRender: PropTypes.func
-};
+function mapDispatchToProps(dispatch) {
+  return {
+    gameAction: bindActionCreators(gameAction, dispatch)
+  };
+}
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Word);

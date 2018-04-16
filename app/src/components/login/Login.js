@@ -52,11 +52,12 @@ class Login extends Component {
           <Button
             width={200}
             height={50}
-            text="Start"
             textInChalk={true}
             className="login__button"
             onClick={this.login}
-          />
+          >
+            Start
+          </Button>
         </div>
       </div>
     );

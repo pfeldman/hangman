@@ -8,6 +8,8 @@ export default {
     letter: null,
     positions: [],
     error: 0,
-    timeStamp: null
+    timeStamp: null,
+    win: false,
+    lost: false
   }
 };

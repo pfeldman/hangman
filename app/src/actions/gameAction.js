@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import {get, post} from 'helpers/serviceHelper';
+import {resetGame} from './letterAction';
 import {LOCAL_STORAGE_USER, LOCAL_STORAGE_TOKEN} from 'constants/Constants';
 
 function fetchGameSuccess(game) {
@@ -44,6 +45,19 @@ export function login(email) {
   };
 }
 
+function restart() {
+  return {
+    type: types.GAME_PLAY_AGAIN
+  }
+}
+
+export function playAgain() {
+  return dispatch => {
+    dispatch(resetGame());
+    dispatch(restart());
+  }
+}
+
 export function logout() {
   localStorage.removeItem(LOCAL_STORAGE_TOKEN);
   localStorage.removeItem(LOCAL_STORAGE_USER);
@@ -51,4 +65,16 @@ export function logout() {
   return {
     type: types.GAME_LOGOUT
   };
+}
+
+export function win() {
+  return {
+    type: types.GAME_WIN
+  }
+}
+
+export function lose() {
+  return {
+    type: types.GAME_LOSE
+  }
 }

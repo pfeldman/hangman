@@ -15,6 +15,8 @@ export default function letter(state = initialState.guess, action) {
         error: action.errors,
         timeStamp: new Date().getTime()
       });
+    case types.LETTER_RESET_GAME:
+      return Object.assign({}, state, initialState.guess);
     default:
       return state;
   }

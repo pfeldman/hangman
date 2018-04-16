@@ -31,8 +31,9 @@ class Home extends Component {
               width={300}
               height={100}
               className="home__start"
-              text="PLAY"
-            />
+            >
+              PLAY
+            </Button>
           </Link>
         </div>
         <div>
@@ -40,8 +41,9 @@ class Home extends Component {
             width={200}
             height={50}
             className="home__stats"
-            text="STATISTICS"
-          />
+          >
+            STATISTICS
+          </Button>
         </div>
       </div>
     );

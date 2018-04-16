@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as gameAction from 'actions/gameAction';
 import {drawInChalk} from 'helpers/chalkHelper';
 import {renderHead, renderNeck, renderArmOrLeg, renderBody, renderFoot, kill} from 'helpers/bodyHelper';
 import {getAngle} from 'helpers/angleHelper';
@@ -28,7 +30,7 @@ class Gallow extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {errors, onLose} = this.props;
+    const {errors, gameAction} = this.props;
     const ctx = this.canvas.getContext('2d');
     if (errors !== prevProps.errors) {
       switch(errors) {
@@ -61,7 +63,7 @@ class Gallow extends Component {
           break;
         case 10:
           kill(ctx, {x: 270, y: 200}, this.brushSize)
-            .then(() => onLose());
+            .then(() => gameAction.lose());
           break;
       }
     }
@@ -76,17 +78,24 @@ class Gallow extends Component {
   }
 }
 
+Gallow.propTypes = {
+  errors: PropTypes.number,
+  gameAction: PropTypes.object
+};
+
 function mapStateToProps(state) {
   return {
-    errors: state.letter.error
+    errors: state.letter.error,
   };
 }
 
-Gallow.propTypes = {
-  errors: PropTypes.number,
-  onLose: PropTypes.func
-};
+function mapDispatchToProps(dispatch) {
+  return {
+    gameAction: bindActionCreators(gameAction, dispatch)
+  };
+}
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Gallow);

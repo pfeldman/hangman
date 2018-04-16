@@ -23,7 +23,7 @@ class Header extends Component {
   render() {
     return (
       <header className="header">
-        <span className="header__logout" onClick={this.logout}>Play with other user</span>
+        <span className="header__logout" onClick={this.logout}>Switch User</span>
         <span className="header__user">{localStorage.getItem(LOCAL_STORAGE_USER)}</span>
       </header>
     );

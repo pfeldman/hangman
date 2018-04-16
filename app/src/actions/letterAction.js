@@ -16,6 +16,12 @@ function postLetterError(errors) {
   };
 }
 
+export function resetGame() {
+  return {
+    type: types.LETTER_RESET_GAME
+  }
+}
+
 export function postLetter(letter) {
   return dispatch => {
     post('letter.json', {letter})

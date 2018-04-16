@@ -10,7 +10,7 @@ class Button extends Component {
   }
 
   drawSquare(color = '255,255,255') {
-    const {text, width, height, textInChalk} = this.props;
+    const {children, width, height, textInChalk} = this.props;
     const ctx = this.startButton.getContext('2d');
 
     drawInChalk(ctx, 0, 0, width, 0, 7, 500, color)
@@ -27,7 +27,7 @@ class Button extends Component {
     ctx.font = `${height / 2}px Arial`;
     ctx.fillStyle = "white";
     ctx.textAlign = 'center';
-    ctx.fillText(text, width / 2, height - height / 3);
+    ctx.fillText(children, width / 2, height - height / 3);
     if (textInChalk) {
       applySquareChalkStyle(ctx,
         {
@@ -59,7 +59,7 @@ class Button extends Component {
 Button.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
-  text: PropTypes.string,
+  children: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func,
   textInChalk: PropTypes.bool

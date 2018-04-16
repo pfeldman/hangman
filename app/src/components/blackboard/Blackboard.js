@@ -8,6 +8,8 @@ import Gallow from 'components/gallow/Gallow';
 import Word from 'components/word/Word';
 import Header from 'components/head/Header';
 import Letters from 'components/letters/Letters';
+import Lost from 'components/lost/Lost';
+import Win from 'components/win/Win';
 import {LOCAL_STORAGE_USER} from '/constants/Constants';
 
 class Blackboard extends Component {
@@ -18,8 +20,6 @@ class Blackboard extends Component {
       endRender: false
     };
 
-    this.win = this.win.bind(this);
-    this.lose = this.lose.bind(this);
     this.renderLetters = this.renderLetters.bind(this);
   }
 
@@ -30,9 +30,16 @@ class Blackboard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {loggedIn} = nextProps;
+    const {loggedIn, gameId, gameAction} = nextProps;
     if (!loggedIn) {
       location.href = '/';
+    }
+
+    if (gameId !== this.props.gameId && this.props.gameId) {
+      gameAction.fetchGame();
+      this.setState({
+        endRender: false
+      });
     }
   }
 
@@ -42,30 +49,50 @@ class Blackboard extends Component {
     });
   }
 
-  win() {
-    console.log('WON!');
+  get game() {
+    const {won, lost, letters} = this.props;
+
+    if (won || lost || !letters) {
+      return null;
+    }
+
+    return (
+      <div className="blackboard__game">
+        <div className="blackboard__game__top">
+          <Gallow />
+          <Letters className={this.state.endRender ? '' : 'hidden'} />
+        </div>
+        <Word letters={letters} finishRender={this.renderLetters} />
+      </div>
+    )
   }
 
-  lose() {
-    console.log('lose :(')
+  get won() {
+    const {won} = this.props;
+
+    if (won) {
+      return <Win />
+    }
+  }
+
+  get lost() {
+    const {lost} = this.props;
+
+    if (lost) {
+      return <Lost />
+    }
   }
 
   render() {
-    const {letters, loggedIn} = this.props;
+    const {loggedIn} = this.props;
 
     if (!loggedIn) return null;
     return (
       <div className="blackboard">
         <Header />
-        <div className="blackboard__game">
-          <div className="blackboard__game__top">
-            <Gallow onLose={this.lose} />
-            <Letters className={this.state.endRender ? '' : 'hidden'} />
-          </div>
-          <Word letters={letters} onWin={this.win} finishRender={this.renderLetters} />
-        </div>
-        <button onClick={this.a}>Sarasa</button>
-        <button onClick={this.b}>Lose</button>
+        {this.game}
+        {this.won}
+        {this.lost}
       </div>
     );
   }
@@ -74,13 +101,19 @@ class Blackboard extends Component {
 Blackboard.propTypes = {
   gameAction: PropTypes.object,
   letters: PropTypes.number,
-  loggedIn: PropTypes.bool
+  loggedIn: PropTypes.bool,
+  won: PropTypes.bool,
+  lost: PropTypes.bool,
+  gameId: PropTypes.number
 };
 
 function mapStateToProps(state) {
   return {
     letters: state.game.letters,
-    loggedIn: state.game.loggedIn
+    loggedIn: state.game.loggedIn,
+    won: state.game.won,
+    lost: state.game.lost,
+    gameId: state.game.gameId
   };
 }
 
