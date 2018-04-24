@@ -24,7 +24,7 @@ export function resetGame() {
 
 export function postLetter(letter) {
   return dispatch => {
-    post('letter.json', {letter})
+    post('letter', {letter})
       .then(response => {
         if (!response.errors) {
           dispatch(postLetterGuessed(response.letter, response.positions));

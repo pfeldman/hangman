@@ -28,7 +28,7 @@ export function sessionLogin() {
 
 export function fetchGame() {
   return dispatch => {
-    get('game.json')
+    get('game')
       .then(game => dispatch(fetchGameSuccess(game)));
   };
 }
@@ -36,7 +36,7 @@ export function fetchGame() {
 export function login(email) {
   return dispatch => {
     dispatch(loginRequest());
-    post('login.json', {email})
+    post('login', {email})
       .then(response => {
         localStorage.setItem(LOCAL_STORAGE_TOKEN, response.token);
         localStorage.setItem(LOCAL_STORAGE_USER, email);
